@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-
+const reactionSchema = require('./Reactions');
 // Schema to create a course model
 const thoughtsSchema = new Schema(
   {
@@ -20,13 +20,10 @@ const thoughtsSchema = new Schema(
     reactions:
       [reactionSchema],
 
-      toJSON: {
-        getters: true, 
-        virtuals: true },
-
-        id: false,
+      timestamps:true
       
     },
+    // ask how to Use a getter method to format the timestamp on query
 );
 
 thoughtsSchema.virtual('reactionCount').get(function () {
