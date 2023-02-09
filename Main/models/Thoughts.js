@@ -12,6 +12,9 @@ const thoughtsSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (date) => {
+        return new Date (date).toLocaleDateString()
+      }
     },
     username: {
       type: String,
@@ -19,10 +22,15 @@ const thoughtsSchema = new Schema(
     },
     reactions:
       [reactionSchema],
-
-      timestamps:true
       
     },
+    {
+      toJSON: {
+        virtual: true,
+        getters: true,
+      },
+      id: false,
+    }
     // ask how to Use a getter method to format the timestamp on query
 );
 

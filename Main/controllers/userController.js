@@ -1,13 +1,13 @@
 const { User, Thoughts } = require('../models');
 
 module.exports = {
-  // Get all courses
+  // Get all Users
   getUsers(req, res) {
     User.find()
       .then((users) => res.json(users))
       .catch((err) => res.status(500).json(err));
   },
-  // Get a course
+  // Get a User
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
       .select('-__v')
@@ -18,7 +18,7 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-  // Create a course
+  // Create a User
   createUser(req, res) {
     User.create(req.body)
       .then((user) => res.json(user))
@@ -27,7 +27,7 @@ module.exports = {
         return res.status(500).json(err);
       });
   },
-  // Delete a course
+  // Delete a User
   deleteUser(req, res) {
     User.findOneAndDelete({ _id: req.params.userId })
       .then((user) =>

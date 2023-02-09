@@ -18,6 +18,9 @@ const reactionsSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (date) => {
+        return new Date (date).toLocaleDateString()
+      }
     },
   },
   {
@@ -29,5 +32,4 @@ const reactionsSchema = new Schema(
 );
 
 
-const Reactions = model('Reactions', reactionsSchema);
-module.exports = Reactions
+module.exports = reactionsSchema

@@ -1,23 +1,12 @@
 const { ObjectId } = require('mongoose').Types;
 const { User,Thoughts, Reactions } = require('../models');
 
-// Aggregate function to get the number of students overall
-const headCount = async () =>
-  Thoughts.aggregate()
-    .count('thoughtCount')
-    .then((numberOfThoughts) => numberOfThoughts);
-
-
 module.exports = {
   // Get all Thoughts
   getThoughts(req, res) {
     Thoughts.find()
-      .then(async (thoughts) => {
-        const thoughtObj = {
-          thoughts,
-          headCount: await headCount(),
-        };
-        return res.json(thoughtObj);
+      .then((thought) => {
+        res.json(thought);
       })
       .catch((err) => {
         console.log(err);
@@ -28,19 +17,26 @@ module.exports = {
   getSingleThought(req, res) {
     Thoughts.findOne({ _id: req.params.thoughtId })
       .select('-__v')
-      .then(async (thought) =>
+      .then((thought) =>
         !thought
           ? res.status(404).json({ message: 'No thought with that ID' })
           : res.json(thought)
       )
       .catch((err) => {
         console.log(err);
-        return res.status(500).json(err);
+        res.status(500).json(err);
       });
   },
   // create a new thought
   createThought(req, res) {
     Thoughts.create(req.body)
+    .then((thought) => {
+      return User.findOneAndUpdate(
+        { _id: req.body.userId },
+        { $addToSet: { thoughts: thought._id } },
+        { new: true }
+      );
+    })
       .then((thought) => res.json(thought))
       .catch((err) => res.status(500).json(err));
   },
@@ -59,7 +55,7 @@ module.exports = {
       .then((user) =>
         !user
           ? res.status(404).json({
-              message: 'Thought deleted, but no User found',
+              message: 'No thought for this ID found in user',
             })
           : res.json({ message: 'Thought successfully deleted' })
       )
@@ -75,7 +71,7 @@ module.exports = {
     console.log(req.body);
     Thoughts.findOneAndUpdate(
       { _id: req.params.thoughtId },
-      { $addToSet: { assignments: req.body } },
+      { $addToSet: { reactions: req.body} },
       { runValidators: true, new: true }
     )
       .then((thought) =>
