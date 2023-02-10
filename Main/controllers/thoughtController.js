@@ -65,7 +65,7 @@ module.exports = {
       });
   },
 
-  // Add an assignment to a student
+  // Add a reaction to a thought
   addReaction(req, res) {
     console.log('You are adding an reaction');
     console.log(req.body);
@@ -83,7 +83,7 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-  // Remove assignment from a student
+  // Remove reaction from a thought
   removeReaction(req, res) {
     Thoughts.findOneAndUpdate(
       { _id: req.params.thoughtId },
