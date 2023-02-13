@@ -40,6 +40,20 @@ module.exports = {
       .then((thought) => res.json(thought))
       .catch((err) => res.status(500).json(err));
   },
+
+  updateThought(req, res) {
+    Thoughts.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $set: req.body },
+      { runValidators: true, new: true }
+    )
+      .then((thought) =>
+        !thought
+          ? res.status(404).json({ message: 'No thought with this id!' })
+          : res.json(thought)
+      )
+      .catch((err) => res.status(500).json(err));
+  },
   // Delete a thought and remove them from the User
   deleteThought(req, res) {
     Thoughts.findOneAndRemove({ _id: req.params.thoughtId })
