@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 const reactionSchema = require('./Reactions');
-// Schema to create a course model
+
+// Schema to create a Thoughts model
 const thoughtsSchema = new Schema(
   {
     thoughtText: {
@@ -31,7 +32,6 @@ const thoughtsSchema = new Schema(
       },
       id: false,
     }
-    // ask how to Use a getter method to format the timestamp on query
 );
 
 thoughtsSchema.virtual('reactionCount').get(function () {
